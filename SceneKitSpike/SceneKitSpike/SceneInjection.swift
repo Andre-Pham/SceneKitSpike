@@ -79,6 +79,8 @@ class SceneViewController: UIViewController, SCNSceneRendererDelegate {
         
         sceneView.scene = scene
         
+        sceneView.allowsCameraControl = true
+        
 //        // 2: Add camera node
 //        let cameraNode = SCNNode()
 //        cameraNode.camera = SCNCamera()
