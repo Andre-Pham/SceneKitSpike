@@ -6,16 +6,28 @@
 //
 
 import SwiftUI
+import SceneKit
 
 struct ContentView: View {
+    var scene = SCNScene(named: "MyScene")
+            
+    var cameraNode: SCNNode? {
+        scene?.rootNode.childNode(withName: "camera", recursively: false)
+    }
+    
     var body: some View {
+//        SceneView(
+//            scene: scene,
+//            pointOfView: cameraNode,
+//            options: []
+//        )
+//        .background(.red)
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            SceneInjection()
+                .border(.red)
+            
+            Text("Hello World")
         }
-        .padding()
     }
 }
 
