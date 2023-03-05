@@ -13,12 +13,19 @@ import SceneKit
 struct SceneInjection: UIViewControllerRepresentable {
     
     typealias UIViewControllerType = SceneViewController
+    private let controller: SceneViewController
+    
+    init(controller: SceneViewController) {
+        self.controller = controller
+    }
     
     func makeUIViewController(context: Context) -> SceneViewController {
-        let controller = SceneViewController()
-        controller.setupSceneView()
-        //controller.showRectangle()
-        return controller
+//        let controller = SceneViewController()
+//        controller.setupSceneView()
+//        //controller.showRectangle()
+//        return controller
+        self.controller.setupSceneView()
+        return self.controller
     }
     
     func updateUIViewController(_ uiViewController: SceneViewController, context: Context) {
@@ -28,6 +35,8 @@ struct SceneInjection: UIViewControllerRepresentable {
 }
 
 class SceneViewController: UIViewController, SCNSceneRendererDelegate {
+    
+    private let scene = SCNScene(named: "art.scnassets/ship.scn")!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +50,6 @@ class SceneViewController: UIViewController, SCNSceneRendererDelegate {
     
     func setupSceneView() {
         // 1: Load .obj file
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
         
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
@@ -61,13 +69,11 @@ class SceneViewController: UIViewController, SCNSceneRendererDelegate {
         ambientLightNode.light!.color = UIColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
 
-        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
-
-        ship.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
+        
 
         //ScenekitView.scene = scene
         
-        let sceneView = SCNView(frame: CGRect(x: 0.0, y: 0.0, width: 500.0, height: 500.0))
+        let sceneView = SCNView(frame: CGRect(x: 0.0, y: 0.0, width: 500.0, height: 1000.0))
         
         sceneView.delegate = self
         
@@ -117,15 +123,27 @@ class SceneViewController: UIViewController, SCNSceneRendererDelegate {
         
         self.view.addSubview(sceneView)
         
-        sceneView.translatesAutoresizingMaskIntoConstraints = false
-        let horizontalConstraint = NSLayoutConstraint(item: sceneView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
-        let verticalConstraint = NSLayoutConstraint(item: sceneView, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
-        let widthConstraint = NSLayoutConstraint(item: sceneView, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 100)
-        let heightConstraint = NSLayoutConstraint(item: sceneView, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 100)
-        self.view.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+//        sceneView.translatesAutoresizingMaskIntoConstraints = false
+//        let horizontalConstraint = NSLayoutConstraint(item: sceneView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+//        let verticalConstraint = NSLayoutConstraint(item: sceneView, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+//        let widthConstraint = NSLayoutConstraint(item: sceneView, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 100)
+//        let heightConstraint = NSLayoutConstraint(item: sceneView, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 100)
+//        self.view.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
 
         
         print("ADDED SceneViewController")
+    }
+    
+    func startLoop() {
+        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
+
+        ship.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
+    }
+    
+    func stopLoop() {
+        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
+        
+        ship.removeAllActions()
     }
     
     

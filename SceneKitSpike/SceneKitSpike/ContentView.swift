@@ -9,11 +9,7 @@ import SwiftUI
 import SceneKit
 
 struct ContentView: View {
-    var scene = SCNScene(named: "MyScene")
-            
-    var cameraNode: SCNNode? {
-        scene?.rootNode.childNode(withName: "camera", recursively: false)
-    }
+    private let controller = SceneViewController()
     
     var body: some View {
 //        SceneView(
@@ -23,10 +19,16 @@ struct ContentView: View {
 //        )
 //        .background(.red)
         VStack {
-            SceneInjection()
+            SceneInjection(controller: self.controller)
                 .border(.red)
             
-            Text("Hello World")
+            Button("Start Loop") {
+                self.controller.startLoop()
+            }
+            
+            Button("End Loop") {
+                self.controller.stopLoop()
+            }
         }
     }
 }
